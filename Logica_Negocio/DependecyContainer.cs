@@ -13,6 +13,7 @@ namespace Logica_Negocio
 
             // Registrando Las Clases:
             services.AddScoped<EmpleadoBL>();
+            services.AddScoped<FacturaBL>();
 
             return services;
         }
