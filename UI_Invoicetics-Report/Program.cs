@@ -1,7 +1,13 @@
+using Logica_Negocio;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Inyeccion De Dependencias:
+builder.Services.AddBLDependecies(builder.Configuration);
+
 
 var app = builder.Build();
 
