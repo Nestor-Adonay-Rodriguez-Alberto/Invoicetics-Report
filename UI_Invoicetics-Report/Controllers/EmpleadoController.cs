@@ -101,7 +101,7 @@ namespace UI_Invoicetics_Report.Controllers
             await _EmpleadoBL.EditarEmpleado(empleado);
 
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Registros_Empleados", "Empleado");
         }
 
 
