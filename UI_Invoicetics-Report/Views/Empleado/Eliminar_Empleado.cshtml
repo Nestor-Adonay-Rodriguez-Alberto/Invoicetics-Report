@@ -4,53 +4,107 @@
     ViewData["Title"] = "Eliminar_Empleado";
 }
 
-<h1>Eliminar_Empleado</h1>
+<style>
+    /* Estilos personalizados */
+    .form-container {
+        max-width: 550px;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        margin-top: 20px;
+    }
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Empleado</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdEmpleado)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdEmpleado)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Salaraio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Salaraio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaNacimiento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaNacimiento)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Fotografia)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Fotografia)
-        </dd>
-    </dl>
-    
-    <form asp-action="Eliminar_Empleado">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+        .form-container h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .form-container .row {
+            margin-bottom: 10px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+</style>
+
+<div class="form-container">
+    <h1>Eliminar</h1><br />
+
+    <div>
+        <h5>Datos Personales</h5>
+        <hr />
+
+        <!-- Fila #1 -->
+        <div class="row">
+            <div class="col-sm-6">
+                <dt>NOMBRE:</dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Nombre)
+                </dd>
+            </div>
+            <div class="col-sm-6">
+                <dt>FECHA DE NACIMIENTO:</dt>
+                <dd class="col-sm-10">
+                    @Model.FechaNacimiento.ToString("dd/MM/yyyy")
+                </dd>
+            </div>
+        </div>
+
+        <!-- Fila #2 -->
+        <div class="row">
+            <div class="col-sm-6">
+                <dt>EMAIL:</dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+            </div>
+            <div class="col-sm-6">
+                <dt>SALARIO:</dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Salaraio)
+                </dd>
+            </div>
+        </div>
+
+        <!-- Fila #3 -->
+        <div class="row">
+            <div class="col-sm-6">
+                <dt>FOTOGRAFIA:</dt>
+                <dd class="col-sm-10">
+                    @{
+                        // Es La Imagen En Base64
+                        string Imagen_Mostar = "";
+
+                        if (Model.Fotografia != null && Model.Fotografia.Length > 0)
+                        {
+                            string Cadena_Imagen = Convert.ToBase64String(Model.Fotografia);
+                            Imagen_Mostar = "data:image/jpeg;base64," + Cadena_Imagen;
+                        }
+
+                        if (Imagen_Mostar.Trim().Length > 0)
+                        {
+                            <img id="VistaImagenEmpleado" src="@Imagen_Mostar" style="max-width:100px; max-height:100px" />
+                        }
+                        else
+                        {
+                            <img src="~/img/defecto.jpg" style="max-width:100px; max-height:100px" />
+                        }
+                    }
+                </dd>
+            </div>
+        </div>
+
+        <form asp-action="Eliminar_Empleado">
+            <input type="hidden" asp-for="IdEmpleado" />
+            <input type="submit" value="ELIMINAR" class="btn btn-danger" /> |
+            <a asp-action="Registros_Empleados" class="btn btn-secondary">CANCELAR</a>
+        </form>
+    </div>
 </div>
+
