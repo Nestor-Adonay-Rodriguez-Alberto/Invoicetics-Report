@@ -3,63 +3,116 @@
 @{
     ViewData["Title"] = "Registros_Empleados";
 }
+<style>
 
-<h1>Registros_Empleados</h1>
+    /* Estilos Del Cuadro */
+    .form-container {
+        max-width: 751px;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        margin-top: 20px;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdEmpleado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Salaraio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaNacimiento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fotografia)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdEmpleado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Salaraio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaNacimiento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fotografia)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        /* Estilos Para h1 */
+        .form-container h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .form-container .row {
+            margin-bottom: 10px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+</style>
+
+<div class="form-container">
+    <h1>Empleados Registrados</h1><br />
+
+    <p>
+        <a asp-action="Registrar_Empleado" class="btn btn-dark">Registrar Nuevo</a>
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("NOMBRE")
+                    </th>
+                    <th>
+                        @Html.DisplayName("SALARIO")
+                    </th>
+                    <th>
+                        @Html.DisplayName("FOTOGRAFIA")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre)
+                        </td>
+                        <td>
+                            <span>$ </span>@Html.DisplayFor(modelItem => item.Salaraio)
+                        </td>
+                        <td>
+                            @{
+                                // Es La Imagen En Base64
+                                string Imagen_Mostar = "";
+
+                                if (item.Fotografia != null && item.Fotografia.Length > 0)
+                                {
+                                    string Cadena_Imagen = Convert.ToBase64String(item.Fotografia);
+                                    Imagen_Mostar = "data:image/jpeg;base64," + Cadena_Imagen;
+                                }
+
+                                if (Imagen_Mostar.Trim().Length > 0)
+                                {
+                                    <img id="VistaImagenEmpleado" src="@Imagen_Mostar" style="max-width:100px; max-height:100px" />
+                                }
+                                else
+                                {
+                                    <img id="VistaImagenEmpleado" src="~/img/defecto.jpg" style="max-width:100px; max-height:100px" />
+                                }
+                            }
+                        </td>
+
+                        <td>
+                            <div class="d-flex flex-wrap">
+                                <div class="btn-group">
+                                    <a asp-action="Editar_Empleado" asp-route-id="@item.IdEmpleado" class="btn btn-primary rounded">Editar</a>
+                                    <a asp-action="Detalle_Empleado" asp-route-id="@item.IdEmpleado" class="btn btn-secondary rounded">Detalles</a>
+                                    <a asp-action="Eliminar_Empleado" asp-route-id="@item.IdEmpleado" class="btn btn-danger rounded">Eliminar</a>
+                                </div>
+                                <style>
+                                    .btn-group {
+                                        display: flex;
+                                        gap: 5px;
+                                    }
+
+                                    .btn {
+                                        flex: 1;
+                                        border-radius: 5px;
+                                    }
+                                </style>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

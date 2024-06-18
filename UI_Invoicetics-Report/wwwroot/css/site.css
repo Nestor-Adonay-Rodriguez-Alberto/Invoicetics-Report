@@ -20,3 +20,8 @@ body {
 .custom-body {
     background-color: #6d6d6d; /* Color de fondo personalizado para el cuerpo */
 }
+
+/* Estilos para el Encabezado */
+.navbar-custom {
+    background-color: #3e3b3b;
+}

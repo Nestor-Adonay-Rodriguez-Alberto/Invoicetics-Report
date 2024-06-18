@@ -25,7 +25,9 @@ namespace Entidades
 
 
         [Required(ErrorMessage = "Ingrese Un Correo Electronico.")]
-        [DataType(DataType.EmailAddress,ErrorMessage ="Lo Ingresado No Es Un Email.")]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "Lo Ingresado No Es Un Email.")]
+
         public string Email { get; set; }
 
 

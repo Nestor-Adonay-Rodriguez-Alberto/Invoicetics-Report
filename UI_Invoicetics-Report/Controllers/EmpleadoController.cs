@@ -63,7 +63,7 @@ namespace UI_Invoicetics_Report.Controllers
 
             await _EmpleadoBL.RegistrarEmpleado(empleado);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Registros_Empleados", "Empleado");
         }
 
         // Manda Un Objeto Encontrado De La Tabla
