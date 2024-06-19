@@ -4,62 +4,102 @@
     ViewData["Title"] = "Registros_Facturas";
 }
 
-<h1>Registros_Facturas</h1>
+<style>
+    /* Estilos Para Cuadro */
+    .form-container {
+        max-width: 739px;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        margin-top: 20px;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdFactura)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaRealizada)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NombreCliente)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Correlativo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Total)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdEmpleadoEnFactura)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdFactura)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaRealizada)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NombreCliente)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Correlativo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Total)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdEmpleadoEnFactura)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        .form-container h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .form-container .row {
+            margin-bottom: 10px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+</style>
+
+<div class="form-container">
+    <h1>Facturas Registradas</h1><br />
+
+    <p>
+        <a asp-action="Registrar_Factura" class="btn btn-dark">Crear Factura</a>
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("FECHA")
+                    </th>
+                    <th>
+                        @Html.DisplayName("HORA")
+                    </th>
+                    <th>
+                        @Html.DisplayName("CLIENTE")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @{
+                                string FechaRealizada = item.FechaRealizada.ToString("dd/MM/yyyy");
+                            }
+                            @FechaRealizada
+                        </td>
+                        <td>
+                            @{
+                                string HoraRealizada = item.FechaRealizada.ToString("HH:mm");
+                            }
+                            @HoraRealizada
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreCliente)
+                        </td>
+                        <td>
+                            <div class="d-flex flex-wrap">
+                                <div class="btn-group">
+                                    <a asp-action="Editar_Factura" asp-route-id="@item.IdFactura" class="btn btn-primary rounded">Editar</a>
+                                    <a asp-action="Detalle_Factura" asp-route-id="@item.IdFactura" class="btn btn-secondary rounded">Detalles</a>
+                                    <a asp-action="Eliminar_Factura" asp-route-id="@item.IdFactura" class="btn btn-danger rounded">Eliminar</a>
+                                </div>
+                                <style>
+                                    .btn-group {
+                                        display: flex;
+                                        gap: 5px;
+                                    }
+
+                                    .btn {
+                                        flex: 1;
+                                        border-radius: 5px;
+                                    }
+                                </style>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
