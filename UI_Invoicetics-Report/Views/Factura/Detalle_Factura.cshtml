@@ -3,52 +3,141 @@
 @{
     ViewData["Title"] = "Detalle_Factura";
 }
+<style>
+    /* Estilos personalizados */
+    .form-container {
+        max-width: 640px;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        margin-top: 20px;
+    }
 
-<h1>Detalle_Factura</h1>
+        .form-container h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+        }
 
-<div>
-    <h4>Factura</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdFactura)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdFactura)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaRealizada)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaRealizada)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NombreCliente)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NombreCliente)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Correlativo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Correlativo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Total)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Total)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdEmpleadoEnFactura)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdEmpleadoEnFactura)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+        .form-container .row {
+            margin-bottom: 10px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+</style>
+
+
+
+<div class="form-container">
+    <h1>Detalle</h1>
+    <br />
+
+    <div>
+        <h5>Datos De Factura</h5>
+        <hr />
+
+        <!--FILA #1 --->
+        <div class="row">
+
+            <div class="col-sm-6">
+                <dt>CLIENTE:</dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.NombreCliente)
+                </dd>
+            </div>
+
+            <div class="col-sm-6">
+
+                <div class="col-sm-4">
+                    <dt>TOTAL:</dt>
+                    <dd class="col-sm-10">
+                        <span>$ </span>@Html.DisplayFor(model => model.Total)
+                    </dd>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--FILA #2 --->
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <dt>FECHA REALIZADA:</dt>
+                <dd class="col-sm-10">
+                    @{
+                        string FechaRealizada = Model.FechaRealizada.ToString("dd/MM/yyyy");
+                    }
+                    @FechaRealizada
+                </dd>               
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <dt>HORA REALIZADA:</dt>
+                <dd class="col-sm-10">
+                    @{
+                        string HoraRealizada = Model.FechaRealizada.ToString("HH:mm");
+                    }
+                    @HoraRealizada
+                </dd>
+
+            </div>
+
+        </div>
+
+
+        <!-- FILA #3 -->
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <div class="col-sm-4">
+                    <dt>CORRELATIVO:</dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Correlativo)
+                    </dd>
+                </div>
+                
+            </div>
+
+            <div class="col-sm-6">
+
+                <dt>EMPLEADO:</dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Objeto_Empleado.Nombre)
+                </dd>
+
+            </div>
+
+        </div><br /><br />
+
+
+        <!-- DETALLES DE LA FACTURA --->
+        <div class="row">
+            <div class="col-sm-12">
+                <h5>Detalle De Los Productos</h5>
+                <hr />
+                <div class="row row-cols-md-12">
+                    @await Html.PartialAsync("_DetalleDeFactura", Model.Lista_DetalleFactura)
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <a asp-action="Editar_Factura" asp-route-id="@Model.IdFactura" class="btn btn-primary">EDITAR</a> |
+            <a asp-action="Registros_Facturas" class="btn btn-secondary">CANCELAR</a>
+        </div>
+
+
+    </div>
 </div>
