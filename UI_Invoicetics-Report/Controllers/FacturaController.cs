@@ -159,7 +159,7 @@ namespace UI_Invoicetics_Report.Controllers
         {
             DetalleFactura Objeto_Obtenido = factura.Lista_DetalleFactura[index];
 
-            if (accion == "Edit" && Objeto_Obtenido.IdDetalleFactura > 0)
+            if (accion == "Editar_Factura" && Objeto_Obtenido.IdDetalleFactura > 0)
             {
                 Objeto_Obtenido.IdDetalleFactura = Objeto_Obtenido.IdDetalleFactura * -1;
             }
@@ -167,8 +167,6 @@ namespace UI_Invoicetics_Report.Controllers
             {
                 factura.Lista_DetalleFactura.RemoveAt(index);
             }
-
-            factura.Total = factura.Lista_DetalleFactura.Sum(s => s.CantidadComprada * s.PrecioProducto);
 
             List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
             ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);

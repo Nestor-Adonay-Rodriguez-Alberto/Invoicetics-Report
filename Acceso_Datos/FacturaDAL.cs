@@ -85,7 +85,7 @@ namespace Acceso_Datos
                 Objeto_Obtenido.FechaRealizada = factura.FechaRealizada;
                 Objeto_Obtenido.NombreCliente = factura.NombreCliente;
                 Objeto_Obtenido.IdEmpleadoEnFactura = factura.IdEmpleadoEnFactura;
-
+                Objeto_Obtenido.Total=factura.Total;
 
                 // NUEVOS DETALLES AGREGARLOS A LAS LISTA:
                 Agregar_Detalles(Objeto_Obtenido, factura);
@@ -97,14 +97,13 @@ namespace Acceso_Datos
 
                 // ELIMINAR LOS DETALLES DE LA LISTA:
                 Eliminar_Detalles(Objeto_Obtenido, factura);
-                
-
-                //Recalcular 
-                Objeto_Obtenido.Total = Objeto_Obtenido.Lista_DetalleFactura.Sum(s => s.CantidadComprada * s.PrecioProducto);
 
 
                 _MyDBcontext.Update(Objeto_Obtenido);
             }
+
+            //Recalcular 
+            Objeto_Obtenido.Total = Objeto_Obtenido.Lista_DetalleFactura.Sum(s => s.CantidadComprada * s.PrecioProducto);
 
             return await _MyDBcontext.SaveChangesAsync();
         }
@@ -155,8 +154,7 @@ namespace Acceso_Datos
                     DetalleFactura? Detalle_ListaEliminar = Objeto_Obtenido.Lista_DetalleFactura.FirstOrDefault(s => s.IdDetalleFactura == Detalle_Eliminar.IdDetalleFactura);
 
                     _MyDBcontext.Remove(Detalle_ListaEliminar);
-
-                    _MyDBcontext.SaveChangesAsync();
+                    _MyDBcontext.SaveChanges();
                 }
             }
         }
