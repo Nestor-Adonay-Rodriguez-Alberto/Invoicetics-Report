@@ -43,12 +43,24 @@
                             <input type="hidden" value="@item.IdFacturaEnDetalleFactura" name="Lista_DetalleFactura[@index].IdFacturaEnDetalleFactura">
 
                             <input class="form-control" data-readonly type="text" name="Lista_DetalleFactura[@index].NombreProducto" value="@item.NombreProducto">
+                            @if (TempData["ProductoRequerido"]!=null)
+                            {
+                                <div class="alert alert-danger">@TempData["ProductoRequerido"]</div>
+                            }
                         </td>
                         <td>
                             <input class="form-control" data-readonly type="number" name="Lista_DetalleFactura[@index].CantidadComprada" value="@item.CantidadComprada">
+                            @if (TempData["CantidadRequerida"] != null)
+                            {
+                                <div class="alert alert-danger">@TempData["CantidadRequerida"]</div>
+                            }
                         </td>
                         <td>
                             <input class="form-control" data-readonly type="number" name="Lista_DetalleFactura[@index].PrecioProducto" value="@item.PrecioProducto">
+                            @if (TempData["PrecioRequerido"] != null)
+                            {
+                                <div class="alert alert-danger">@TempData["PrecioRequerido"]</div>
+                            }
                         </td>
 
                         <td>

@@ -55,9 +55,9 @@ namespace UI_Invoicetics_Report.Controllers
                 fechaHoraActual.Day,
                 fechaHoraActual.Hour,
                 fechaHoraActual.Minute,
-                0 
+                0
             );
-            Objeto_Inicio.FechaRealizada = fechaHoraActualizada; 
+            Objeto_Inicio.FechaRealizada = fechaHoraActualizada;
 
             Objeto_Inicio.Correlativo = Facturas_Registradas + 1;
 
@@ -79,9 +79,36 @@ namespace UI_Invoicetics_Report.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Registrar_Factura(Factura factura)
         {
-            factura.Total = factura.Lista_DetalleFactura.Sum(x => x.CantidadComprada * x.PrecioProducto);
+            // Verificar Si Un Atributo Del Detalle Biene Vasio
+            if (factura.Lista_DetalleFactura.Any(x => x.NombreProducto == null || x.CantidadComprada<1 || x.PrecioProducto < 1))
+            {
 
-            await _FacturaBL.Registrar_Factura(factura);
+                if(factura.Lista_DetalleFactura.Any(x => x.NombreProducto ==null))
+                {
+                    TempData["ProductoRequerido"] = "Ingrese El Nombre Del Producto A LLevar.";
+                }
+                if (factura.Lista_DetalleFactura.Any(x => x.CantidadComprada <1))
+                {
+                    TempData["CantidadRequerida"] = "Ingrese La Cantidad A LLevar.";
+                }
+                if (factura.Lista_DetalleFactura.Any(x => x.PrecioProducto <1))
+                {
+                    TempData["PrecioRequerido"] = "Ingrese El Precio Del Producto.";
+                }
+
+
+                List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
+                ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
+
+
+                ViewBag.Accion = "Registrar_Factura";
+                return View(factura);
+            }           
+            else
+            {
+                factura.Total = factura.Lista_DetalleFactura.Sum(x => x.CantidadComprada * x.PrecioProducto);
+                await _FacturaBL.Registrar_Factura(factura);
+            }
 
             return RedirectToAction("Registros_Facturas", "Factura");
         }
@@ -105,7 +132,35 @@ namespace UI_Invoicetics_Report.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Editar_Factura(Factura factura)
         {
-            await _FacturaBL.Editar_Factura(factura);
+            // Verificar Si Un Atributo Del Detalle Biene Vasio
+            if (factura.Lista_DetalleFactura.Any(x => x.NombreProducto == null || x.CantidadComprada < 1 || x.PrecioProducto < 1))
+            {
+
+                if (factura.Lista_DetalleFactura.Any(x => x.NombreProducto == null))
+                {
+                    TempData["ProductoRequerido"] = "Ingrese El Nombre Del Producto A LLevar.";
+                }
+                if (factura.Lista_DetalleFactura.Any(x => x.CantidadComprada < 1))
+                {
+                    TempData["CantidadRequerida"] = "Ingrese La Cantidad A LLevar.";
+                }
+                if (factura.Lista_DetalleFactura.Any(x => x.PrecioProducto < 1))
+                {
+                    TempData["PrecioRequerido"] = "Ingrese El Precio Del Producto.";
+                }
+
+
+                List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
+                ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
+
+
+                ViewBag.Accion = "Registrar_Factura";
+                return View(factura);
+            }
+            else
+            {
+                await _FacturaBL.Editar_Factura(factura);
+            }
 
             return RedirectToAction("Registros_Facturas", "Factura");
         }
