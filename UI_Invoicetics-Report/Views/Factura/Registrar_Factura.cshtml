@@ -8,7 +8,7 @@
 <style>
     /* Estilos Para Cuadro */
     .form-container {
-        max-width: 980px;
+        max-width: 700px;
         padding: 20px;
         background-color: #f7f7f7;
         border-radius: 20px;
@@ -47,13 +47,13 @@
         <!-- FILA #1 -->
         <div class="row">
 
-            <div class="form-group col-md-5">
+            <div class="form-group col-md-6">
                 <label class="control-label">CLIENTE:</label>
                 <input asp-for="NombreCliente" class="form-control" />
                 <span asp-validation-for="NombreCliente" class="text-danger"></span>
             </div>
 
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label class="control-label">FECHA REALIZADA:</label>
                 <input asp-for="FechaRealizada" class="form-control" />
                 <span asp-validation-for="FechaRealizada" class="text-danger"></span>
@@ -71,15 +71,17 @@
         <div class="row">
 
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label class="control-label">CORRELATIVO:</label>
                 <input readonly asp-for="Correlativo" class="form-control" />
                 <span asp-validation-for="Correlativo" class="text-danger"></span>
             </div>
 
-            <div class="form-group col-md-5">
+            <div class="form-group col-md-6">
                 <label class="control-label">EMPLEADO:</label>
-                <select asp-for="IdEmpleadoEnFactura" class="form-control" asp-items="ViewBag.Lista_Empleados"></select>
+                <select asp-for="IdEmpleadoEnFactura" class="form-control" asp-items="ViewBag.Lista_Empleados">
+                    <option selected value="">Seleccionar...</option>
+                </select>
                 <span asp-validation-for="IdEmpleadoEnFactura" class="text-danger"></span>
             </div>
 

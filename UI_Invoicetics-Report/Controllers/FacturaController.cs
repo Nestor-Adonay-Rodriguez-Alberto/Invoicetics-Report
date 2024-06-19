@@ -48,20 +48,15 @@ namespace UI_Invoicetics_Report.Controllers
             // Objeto Con Informacion de Inicio:
             Factura Objeto_Inicio = new Factura();
 
-            // Obtener la fecha y hora actual
             DateTime fechaHoraActual = DateTime.Now;
-
-            // Crear una nueva instancia de DateTime con la fecha y hora actuales
             DateTime fechaHoraActualizada = new DateTime(
                 fechaHoraActual.Year,
                 fechaHoraActual.Month,
                 fechaHoraActual.Day,
                 fechaHoraActual.Hour,
                 fechaHoraActual.Minute,
-                0 // Establecer los segundos en 0 si no deseas incluirlos
+                0 
             );
-
-            // Asignar la fecha y hora actualizada al atributo de fecha del objeto
             Objeto_Inicio.FechaRealizada = fechaHoraActualizada; 
 
             Objeto_Inicio.Correlativo = Facturas_Registradas + 1;

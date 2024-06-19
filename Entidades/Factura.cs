@@ -32,6 +32,7 @@ namespace Entidades
 
 
         // Referencia Tabla Empleado:
+        [Required(ErrorMessage = "Seleccione Al Empleado")]
         [ForeignKey("Objeto_Empleado")]
         public int IdEmpleadoEnFactura { get; set; }
         public virtual Empleado Objeto_Empleado { get; set; }
