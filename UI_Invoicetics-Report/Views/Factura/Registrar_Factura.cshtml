@@ -4,55 +4,109 @@
     ViewData["Title"] = "Registrar_Factura";
 }
 
-<h1>Registrar_Factura</h1>
 
-<h4>Factura</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Registrar_Factura">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdFactura" class="control-label"></label>
-                <input asp-for="IdFactura" class="form-control" />
-                <span asp-validation-for="IdFactura" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaRealizada" class="control-label"></label>
-                <input asp-for="FechaRealizada" class="form-control" />
-                <span asp-validation-for="FechaRealizada" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NombreCliente" class="control-label"></label>
+<style>
+    /* Estilos Para Cuadro */
+    .form-container {
+        max-width: 980px;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        margin-top: 20px; 
+    }
+
+        .form-container h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .form-container .row {
+            margin-bottom: 10px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+</style>
+
+<div class="form-container">
+    <h1>Registrar Factura</h1>
+    <br />
+
+    <h5>Datos De La Factura</h5>
+    <hr />
+    <form asp-action="Registrar_Factura">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- FILA #1 -->
+        <div class="row">
+
+            <div class="form-group col-md-5">
+                <label class="control-label">CLIENTE:</label>
                 <input asp-for="NombreCliente" class="form-control" />
                 <span asp-validation-for="NombreCliente" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Correlativo" class="control-label"></label>
-                <input asp-for="Correlativo" class="form-control" />
-                <span asp-validation-for="Correlativo" class="text-danger"></span>
+
+            <div class="form-group col-md-3">
+                <label class="control-label">FECHA REALIZADA:</label>
+                <input asp-for="FechaRealizada" class="form-control" />
+                <span asp-validation-for="FechaRealizada" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
+
+            <div class="form-group col-md-2">
+                <label class="control-label">TOTAL:</label>
+                <input readonly asp-for="Total" class="form-control" />
                 <span asp-validation-for="Total" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IdEmpleadoEnFactura" class="control-label"></label>
-                <input asp-for="IdEmpleadoEnFactura" class="form-control" />
+
+        </div>
+
+        <!-- FILA #2 -->
+        <div class="row">
+
+
+            <div class="form-group col-md-2">
+                <label class="control-label">CORRELATIVO:</label>
+                <input readonly asp-for="Correlativo" class="form-control" />
+                <span asp-validation-for="Correlativo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-5">
+                <label class="control-label">EMPLEADO:</label>
+                <select asp-for="IdEmpleadoEnFactura" class="form-control" asp-items="ViewBag.Lista_Empleados"></select>
                 <span asp-validation-for="IdEmpleadoEnFactura" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+        </div><br /><br />
+
+        <!-- VISTA DETALLE -->
+        <h5>Detalles De Los Productos</h5>
+        <div class="row row-cols-md-12">
+            @await Html.PartialAsync("_DetalleDeFactura", Model.Lista_DetalleFactura)
+        </div>
+
+        <!-- BOTONES -->
+        <div class="row">
+
+            <div class="form-group">
+                <input type="submit" value="GUARDAR" class="btn btn-primary" />
+                <a asp-action="Registros_Facturas" class="btn btn-secondary">CANCELAR</a>
+            </div>
+
+        </div>
+
+
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

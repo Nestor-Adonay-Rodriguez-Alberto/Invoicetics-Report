@@ -32,7 +32,7 @@ namespace UI_Invoicetics_Report.Controllers
         {
             Factura Objeto_Obtenido = await _FacturaBL.Obtener_PorId(new Factura() { IdFactura = id });
 
-            ViewBag.Accion = "Details";
+            ViewBag.Accion = "Detalle_Factura";
             return View(Objeto_Obtenido);
         }
 
@@ -48,6 +48,22 @@ namespace UI_Invoicetics_Report.Controllers
             // Objeto Con Informacion de Inicio:
             Factura Objeto_Inicio = new Factura();
 
+            // Obtener la fecha y hora actual
+            DateTime fechaHoraActual = DateTime.Now;
+
+            // Crear una nueva instancia de DateTime con la fecha y hora actuales
+            DateTime fechaHoraActualizada = new DateTime(
+                fechaHoraActual.Year,
+                fechaHoraActual.Month,
+                fechaHoraActual.Day,
+                fechaHoraActual.Hour,
+                fechaHoraActual.Minute,
+                0 // Establecer los segundos en 0 si no deseas incluirlos
+            );
+
+            // Asignar la fecha y hora actualizada al atributo de fecha del objeto
+            Objeto_Inicio.FechaRealizada = fechaHoraActualizada; 
+
             Objeto_Inicio.Correlativo = Facturas_Registradas + 1;
 
             Objeto_Inicio.Lista_DetalleFactura = new List<DetalleFactura>();
@@ -58,7 +74,7 @@ namespace UI_Invoicetics_Report.Controllers
             ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre");
 
 
-            ViewBag.Accion = "Create";
+            ViewBag.Accion = "Registrar_Factura";
             return View(Objeto_Inicio);
         }
 
@@ -84,7 +100,7 @@ namespace UI_Invoicetics_Report.Controllers
             List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
             ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", Objeto_Obtenido.IdEmpleadoEnFactura);
 
-            ViewBag.Accion = "Edit";
+            ViewBag.Accion = "Editar_Factura";
             return View(Objeto_Obtenido);
         }
 
@@ -105,7 +121,7 @@ namespace UI_Invoicetics_Report.Controllers
         {
             Factura Objeto_Obtenido = await _FacturaBL.Obtener_PorId(new Factura() { IdFactura = id });
 
-            ViewBag.Accion = "Delete";
+            ViewBag.Accion = "Eliminar_Factura";
             return View(Objeto_Obtenido);
         }
 
@@ -126,7 +142,7 @@ namespace UI_Invoicetics_Report.Controllers
 
         //         METODOS PARA AGREGAR O ELIMINAR DETALLES A LA FACTURA
         // **********************************************************************
-       
+
         public async Task<IActionResult> Agregar_Detalle(Factura factura, string accion)
         {
             //Agregamos Detalle A La Lista:

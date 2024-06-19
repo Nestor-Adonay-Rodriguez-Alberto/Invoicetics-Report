@@ -1,0 +1,95 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<Entidades.DetalleFactura>
+<input type="hidden" name="accion" value="@ViewBag.Accion" />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Nombre Del Producto")
+            </th>
+            <th>
+                @Html.DisplayName("Cantidad A LLevar")
+            </th>
+            <th>
+                @Html.DisplayName("Precio Del Producto")
+            </th>
+            <th>
+                @if (ViewBag.Accion == "Registrar_Factura" || ViewBag.Accion == "Editar_Factura")
+                {
+                    <button type="submit" class="btn btn-primary" formaction="@Url.Action("Agregar_Detalle")">Agregar</button>
+                }
+
+            </th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @{
+            int index = -1;
+        }
+        @if (Model != null && Model.Count() > 0)
+        {
+            @foreach (var item in Model)
+            {
+                index++;
+                if (item.IdDetalleFactura > -1)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" value="@item.IdDetalleFactura" name="Lista_DetalleFactura[@index].IdDetalleFactura">
+                            <input type="hidden" value="@item.IdFacturaEnDetalleFactura" name="Lista_DetalleFactura[@index].IdFacturaEnDetalleFactura">
+
+                            <input class="form-control" data-readonly type="text" name="Lista_DetalleFactura[@index].NombreProducto" value="@item.NombreProducto">
+                        </td>
+                        <td>
+                            <input class="form-control" data-readonly type="number" name="Lista_DetalleFactura[@index].CantidadComprada" value="@item.CantidadComprada">
+                        </td>
+                        <td>
+                            <input class="form-control" data-readonly type="number" name="Lista_DetalleFactura[@index].PrecioProducto" value="@item.PrecioProducto">
+                        </td>
+
+                        <td>
+                            @if (ViewBag.Accion == "Registrar_Factura" || ViewBag.Accion == "Editar_Factura")
+                            {
+                                <button name="index" value="@index" class="btn btn-secondary" type="submit" formaction="@Url.Action("Eliminar_Detalle")">Eliminar</button>
+                            }
+
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr style="display:none">
+                        <td>
+                            <input type="hidden" value="@item.IdDetalleFactura" name="Lista_DetalleFactura[@index].IdDetalleFactura">
+                            <input type="hidden" value="@item.IdFacturaEnDetalleFactura" name="Lista_DetalleFactura[@index].IdFacturaEnDetalleFactura">
+                            <input type="hidden" name="Lista_DetalleFactura[@index].NombreProducto" value="@item.NombreProducto">
+                            <input type="hidden" name="Lista_DetalleFactura[@index].CantidadComprada" value="@item.CantidadComprada">
+                            <input type="hidden" name="Lista_DetalleFactura[@index].PrecioProducto" value="@item.PrecioProducto">
+                        </td>
+                    </tr>
+                }
+            }
+        }
+
+    </tbody>
+</table>
+
+
+
+@if (ViewBag.Accion == "Detalle_Factura" || ViewBag.Accion == "Eliminar_Factura")
+{
+    <script>
+
+        const readOnly = document.querySelectorAll("*[data-readonly]");
+        for (var i = 0; i < readOnly.length; i++) {
+            const item = readOnly[i];
+            item.setAttribute("readonly", true);
+        }
+
+    </script>
+}
+
