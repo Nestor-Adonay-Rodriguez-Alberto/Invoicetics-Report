@@ -64,7 +64,7 @@ namespace Logica_Negocio
         // Recibe Un Objeto Lo Busca Y Elimina El Encontrado:
         public async Task<int> Eliminar_Factura(Factura factura)
         {
-            return await _FacturaDAL.Editar_Factura(factura);
+            return await _FacturaDAL.Eliminar_Factura(factura);
         }
     }
 }
