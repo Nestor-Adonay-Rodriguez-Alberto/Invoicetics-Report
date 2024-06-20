@@ -19,6 +19,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// PARA REPORTES PDF ROTATIVA:
+IWebHostEnvironment env = app.Environment;
+Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, "../wwwroot/Rotativa");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
