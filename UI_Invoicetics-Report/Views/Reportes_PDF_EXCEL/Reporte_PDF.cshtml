@@ -1,0 +1,83 @@
+﻿@model List<Entidades.Factura>
+
+@{
+    Layout = null;
+}
+
+<style>
+
+    /* Estilos para la tabla principal */
+    table {
+        width: 100%; /* Ancho del 100% para que la tabla ocupe todo el espacio disponible */
+        border-collapse: collapse; /* Colapsa los bordes de las celdas para que se vean como una tabla continua */
+    }
+
+    /* Estilos para las celdas de encabezado y contenido */
+    th, td {
+        border: 2px solid #000; /* Borde sólido de 2 píxeles de grosor y color negro */
+        padding: 10px; /* Relleno interno de 8 píxeles para separar el contenido del borde */
+        text-align: center; /* Centra el contenido dentro de las celdas */
+    }
+
+    th {
+        background-color: #f2f2f2; /* Color de fondo gris claro para los encabezados */
+    }
+
+    .subtotal {
+        font-weight: bold; /* Texto en negrita para resaltar los subtotales */
+    }
+</style>
+
+<table>
+    <thead>
+        <tr>
+            <th>CORRELATIVO</th>
+            <th>FECHA REALIZADA</th>
+            <th>HORA REALIZADA</th>
+            <th>EMPLEADO</th>
+            <th>CLIENTE</th>
+            <th>TOTAL</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Correlativo</td>
+                @{
+                    string Fecha_Realizada = item.FechaRealizada.ToString("dd/MM/yyyy");
+                    string Hora_Realizada = item.FechaRealizada.ToString("HH:mm tt");
+                }
+                <td>@Fecha_Realizada</td>
+                <td>@Hora_Realizada</td>
+                <td>@item.Objeto_Empleado.Nombre</td>
+                <td>@item.NombreCliente</td>
+                <td>$ @item.Total</td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            @foreach (var Objeto_Detalle in item.Lista_DetalleFactura)
+                            {
+                                <tr>
+                                    <td>@Objeto_Detalle.NombreProducto</td>
+                                    <td>@Objeto_Detalle.CantidadComprada</td>
+                                    <td>$ @Objeto_Detalle.PrecioProducto</td> 
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
