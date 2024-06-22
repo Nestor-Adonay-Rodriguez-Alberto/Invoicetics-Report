@@ -28,13 +28,13 @@ namespace Acceso_Datos
             return Objetos_Obtenidos;
         }
 
-        // Encuentra y Manda Los Objetos Con Ese Id:
-        public async Task<List<Factura>> Facturas_Realizadas(int ID)
+
+        // Manda Todos Los Registros De Tabla Facturas:
+        public async Task<List<Factura>> Obtener_Facturas_Registradas()
         {
             List<Factura> Objetos_Obtenidos = await _MyDBcontext.Facturas
                 .Include(x => x.Lista_DetalleFactura)
                 .Include(x => x.Objeto_Empleado)
-                .Where(x => x.IdEmpleadoEnFactura == ID)
                 .ToListAsync();
 
             return Objetos_Obtenidos;

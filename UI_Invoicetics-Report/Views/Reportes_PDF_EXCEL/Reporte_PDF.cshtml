@@ -1,5 +1,4 @@
-﻿@model List<Entidades.Factura>
-
+﻿@model IQueryable<Entidades.Factura>
 @{
     Layout = null;
 }
@@ -65,13 +64,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                             @foreach (var Objeto_Detalle in item.Lista_DetalleFactura)
                             {
                                 <tr>
                                     <td>@Objeto_Detalle.NombreProducto</td>
                                     <td>@Objeto_Detalle.CantidadComprada</td>
-                                    <td>$ @Objeto_Detalle.PrecioProducto</td> 
+                                    <td>$ @Objeto_Detalle.PrecioProducto</td>
                                 </tr>
                             }
                         </tbody>

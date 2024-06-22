@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using OfficeOpenXml.Style;
 using OfficeOpenXml;
 using Rotativa.AspNetCore;
-using System;
 
 namespace UI_Invoicetics_Report.Controllers
 {
@@ -21,10 +20,12 @@ namespace UI_Invoicetics_Report.Controllers
         }
 
 
-        // Manda Lista De Empleados
+
+        // MANDA UNA LISTA DE EMPLEADOS:
         public async Task<IActionResult> Pagina_Inicio()
         {
             List<Empleado> Lista_Empleados = await _ReportesBL.Lista_Empleados();
+            Lista_Empleados.Insert(0, new Empleado { IdEmpleado = 0, Nombre = "Seleccionar..." });
 
             ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre");
 
@@ -32,25 +33,27 @@ namespace UI_Invoicetics_Report.Controllers
         }
 
 
-        // Recibe El Empleado Y La Opcion De Reporte
-        public async Task<IActionResult> Generar_Reporte(int Empleado, string Opcion)
+        // BUSCA LAS FACTURAS REGISTRADAS Y CREA UN REPORTE DE ELLAS:
+        public async Task<IActionResult> Generar_Reporte(Factura factura, string Opcion)
         {
-            if (Empleado == 0)
+            // Validar Que Contenga Informacion factura:
+            if (factura.IdEmpleadoEnFactura == 0 && factura.FechaBuscar == null && factura.MesBuscar == null)
             {
-                TempData["Error"] = "Selecciona Un Empleado.";
-
+                TempData["Error"] = "Debe Ingresar Algun \"Empleado, Fecha o Meses\" Para Crear Un Reporte.";
                 List<Empleado> Lista_Empleados = await _ReportesBL.Lista_Empleados();
+                Lista_Empleados.Insert(0, new Empleado { IdEmpleado = 0, Nombre = "Seleccionar..." });
 
                 ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre");
 
                 return View("Pagina_Inicio");
             }
-
-            List<Factura> Objetos_Obtenidos = await _ReportesBL.Facturas_Realizadas(Empleado);
+            // Facturas Encontradas:
+            IQueryable<Factura> Objetos_Obtenidos = await Obtener_Facturas(factura);
 
             // CREACION DE LOS REPORTES:
             if (Opcion == "PDF")
             {
+
                 return new ViewAsPdf("Reporte_PDF", Objetos_Obtenidos)
                 {
 
@@ -58,8 +61,8 @@ namespace UI_Invoicetics_Report.Controllers
             }
             else if (Opcion == "EXCEL")
             {
-                // LLamamos Metodo:
-                byte[] fileContents = await Reporte_EXCEL(Objetos_Obtenidos);
+                // Obtenemos El EXCEL:
+                byte[] fileContents = await Crear_Excel(Objetos_Obtenidos);
 
                 // Devolvemos el archivo Excel como una descarga
                 return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EXCEL.xlsx");
@@ -71,8 +74,82 @@ namespace UI_Invoicetics_Report.Controllers
         }
 
 
+
+
+
+
+        // OBTIENE LAS FACTURAS SEGUN LAS OPCIONES ELEGIDAS:
+        private async Task<IQueryable<Factura>> Obtener_Facturas(Factura factura)
+        {
+
+            // Obtiene Todos Los Registros De Facturas:
+            List<Factura> Objetos_Obtenidos = await _ReportesBL.Obtener_Facturas_Registradas();
+
+            // Para Hacer Consultas
+            IQueryable<Factura> Query_Objetos = Objetos_Obtenidos.AsQueryable();
+
+            // Agrupamos Por Empleados:
+            if (factura.IdEmpleadoEnFactura != 0)
+            {
+                Query_Objetos = Query_Objetos.Where(s => s.IdEmpleadoEnFactura == factura.IdEmpleadoEnFactura);
+            }
+
+            // Agrupamos Por Fechas:
+            if (factura.FechaBuscar != null)
+            {
+                DateTime Fecha = factura.FechaBuscar.Value.Date;
+                Query_Objetos = Query_Objetos.Where(s => s.FechaRealizada.Date == factura.FechaBuscar.Value.Date);
+            }
+
+            // Agrupamos Por Meses:
+            if (!string.IsNullOrWhiteSpace(factura.MesBuscar))
+            {
+                IQueryable<Factura> Query_Objetos_2 = Facturas_Meses(Query_Objetos, factura);
+
+                return Query_Objetos_2;
+            }
+
+            return Query_Objetos;
+        }
+
+
+        // SELECCIONA LAS FACTURAS QUE SOLO CUMPLAN CON LA CONDICION:
+        private IQueryable<Factura> Facturas_Meses(IQueryable<Factura> Query_Objetos, Factura factura)
+        {
+            int Mes_Actual = DateTime.Now.Month;
+
+            if (factura.MesBuscar == "Mes Actual.")
+            {
+                Query_Objetos = Query_Objetos.Where(s => s.FechaRealizada.Date.Month == Mes_Actual);
+            }
+
+            if (factura.MesBuscar == "Ultimos 3 Meses.")
+            {
+                int Mes_2 = Mes_Actual - 1;
+                int Mes_3 = Mes_2 - 1;
+                Query_Objetos = Query_Objetos.Where(s => s.FechaRealizada.Date.Month == Mes_Actual ||
+                s.FechaRealizada.Date.Month == Mes_2 || s.FechaRealizada.Date.Month == Mes_3);
+            }
+
+            if (factura.MesBuscar == "Ultimos 6 Meses.")
+            {
+                int Mes_2 = Mes_Actual - 1;
+                int Mes_3 = Mes_2 - 1;
+                int Mes_4 = Mes_3 - 1;
+                int Mes_5 = Mes_4 - 1;
+                int Mes_6 = Mes_5 - 1;
+
+                Query_Objetos = Query_Objetos.Where(s => s.FechaRealizada.Date.Month == Mes_Actual ||
+                s.FechaRealizada.Date.Month == Mes_2 || s.FechaRealizada.Date.Month == Mes_3 ||
+                s.FechaRealizada.Date.Month == Mes_4 || s.FechaRealizada.Date.Month == Mes_5 ||
+                s.FechaRealizada.Date.Month == Mes_6);
+            }
+
+            return Query_Objetos;
+        }
+
         //Crea El Excel
-        private async Task<byte[]> Reporte_EXCEL(List<Factura> Objetos_Obtenidos)
+        private async Task<byte[]> Crear_Excel(IQueryable<Factura> Objetos_Obtenidos)
         {
             using (var package = new ExcelPackage())
             {
@@ -171,7 +248,6 @@ namespace UI_Invoicetics_Report.Controllers
             }
 
         }
-
 
 
     }

@@ -28,9 +28,9 @@ namespace Logica_Negocio
 
 
         // Encuentra y Manda Los Objetos Con Ese Id:
-        public async Task<List<Factura>> Facturas_Realizadas(int ID)
+        public async Task<List<Factura>> Obtener_Facturas_Registradas()
         {
-            return await _ReportesDAL.Facturas_Realizadas(ID);
+            return await _ReportesDAL.Obtener_Facturas_Registradas();
         }
     }
 }

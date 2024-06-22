@@ -26,6 +26,14 @@ namespace Entidades
         public double Total { get; set; }
 
 
+        [NotMapped]
+        public DateTime? FechaBuscar { get; set; }
+
+        [NotMapped]
+        public string? MesBuscar { get; set; }
+
+
+
         // Tabla DetalleFcatura Asociada A Esta:
         public virtual List<DetalleFactura> Lista_DetalleFactura { get; set; }
 

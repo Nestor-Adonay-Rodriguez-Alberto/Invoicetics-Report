@@ -1,4 +1,9 @@
-﻿
+﻿@model Entidades.Factura
+
+@{
+    ViewData["Title"] = "Pagina_Inicio";
+}
+
 <style>
     /* Estilos personalizados */
     .form-container {
@@ -30,43 +35,68 @@
 </style>
 
 <div class="form-container">
-    <h1>GENERAR REPORTEs</h1>
+    <h1>GENERAR REPORTES</h1>
     <br />
+
+    <h5>Tipo De Reporte:</h5>
     <hr />
     <form asp-action="Generar_Reporte">
 
         <!-- FILA #1 -->
         <div class="row">
-            
-            <div class="form-group col-md-8">
 
-                <label class="control-label">EMPLEADO:</label>
-                <select class="form-select" name="Empleado" asp-items="ViewBag.Lista_Empleados">
-                    <option selected value="">Seleccionar...</option>
-                </select>
-                @if (TempData["Error"] != null)
-                {
-                    <div class="alert alert-danger">@TempData["Error"]</div>
-                }
-            </div>
-
-            <div class="form-group col-md-4">
+            <div class="text-center">
                 <label class="control-label">TIPO REPORTE:</label>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Opcion" id="pdfOption" value="PDF">
-                    <label class="form-check-label" for="pdfOption">PDF</label>
-                </div>
+                <div class="form-group">
 
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Opcion" id="excelOption" value="EXCEL">
-                    <label class="form-check-label" for="excelOption">EXCEL</label>
+                    <div class="form-check form-check-inline" style="margin-left: 20px;">
+                        <input class="form-check-input" type="radio" name="Opcion" id="pdfOption" value="PDF">
+                        <label class="form-check-label" for="pdfOption">PDF</label>
+                    </div>
+
+                    <div class="form-check form-check-inline" style="margin-left: 30px;">
+                        <input class="form-check-input" type="radio" name="Opcion" id="excelOption" value="EXCEL">
+                        <label class="form-check-label" for="excelOption">EXCEL</label>
+                    </div>
                 </div>
 
             </div>
+        </div>
+
+
+        <!-- FILA #2 -->
+        <div class="row">
+
+            <div class="form-group col-md-7">
+
+                <label class="control-label">EMPLEADO:</label>
+                <select asp-for="IdEmpleadoEnFactura" class="form-control" asp-items="ViewBag.Lista_Empleados">
+                </select>
+            </div>
+
+            <div class="form-group col-md-5">
+                <label class="control-label">MESES:</label>
+                <select asp-for="MesBuscar" class="form-control">
+
+                    <option selected value=" ">Seleccionar...</option>
+                    <option value="Mes Actual.">Mes Actual.</option>
+                    <option value="Ultimos 3 Meses.">Ultimos 3 Meses.</option>
+                    <option value="Ultimos 6 Meses.">Ultimos 6 Meses.</option>
+
+                </select>
+            </div>
+
+            
 
         </div>
 
+        <div class="form-group col-md-5">
+            <label class="control-label">FECHA:</label>
+            <input asp-for="FechaBuscar" class="form-control" />
+            <span asp-validation-for="FechaBuscar" class="text-danger"></span>
+        </div><br />
+        
 
         <!-- BOTONES -->
         <div class="row">
@@ -74,10 +104,19 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-dark">Generar</button>
             </div>
-
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
         </div>
-       
+
 
 
     </form>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
