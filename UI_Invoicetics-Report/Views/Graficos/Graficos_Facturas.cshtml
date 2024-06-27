@@ -1,0 +1,94 @@
+﻿<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<style>
+
+    /* Estilos responsivos para pantallas pequeñas */
+    .chart-container {
+        width: 100%;
+        height: 400px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    /* Estilos para el contenedor principal */
+    .chart-container-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+   
+</style>
+
+<!-- GRAFICOS -->
+
+<div class="chart-container-wrapper">
+    <div id="myChartPastel" class="chart-container"></div>
+    <div id="myChartBarra" class="chart-container"></div>
+</div>
+
+@section Scripts {
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        var datosGrafico = {};
+
+        function Grafico_Pastel() {
+            // Set Data
+            const data = google.visualization.arrayToDataTable(datosGrafico);
+
+            // Set Options
+            const options = {
+                title: 'Ultimos 6 Meses',
+                is3D: true
+            };
+
+            // Draw
+            const chart = new google.visualization.PieChart(document.getElementById('myChartPastel'));
+            chart.draw(data, options);
+        }
+
+        function Grafico_Barra() {
+            // Set Data
+            const data = google.visualization.arrayToDataTable(datosGrafico);
+
+            // Set Options
+            const options = {
+                title: 'Ultimos 6 Meses'
+            };
+
+            // Draw
+            const chart = new google.visualization.BarChart(document.getElementById('myChartBarra'));
+            chart.draw(data, options);
+        }
+
+        function redrawCharts() {
+            Grafico_Pastel();
+            Grafico_Barra();
+        }
+
+        // Vuelve a dibujar los gráficos cuando la ventana cambie de tamaño
+        window.addEventListener('resize', redrawCharts);
+
+        function iniciar() {
+            $.ajax({
+                url: '@Url.Action("Obtener_Facturas", "Graficos")',
+                method: "POST",
+                success: function (response) {
+                    datosGrafico = [['MES', 'FACTURAS']];
+                    for (var i = 0; i < response.length; i++) {
+                        const item = response[i];
+                        datosGrafico.push([item.grupo, item.cantidad]);
+                    }
+
+                    google.charts.setOnLoadCallback(Grafico_Pastel);
+                    google.charts.setOnLoadCallback(Grafico_Barra);
+                },
+                error: function (error) {
+                    console.log("Error creating user:", error);
+                }
+            });
+        }
+
+        iniciar();
+    </script>
+}
