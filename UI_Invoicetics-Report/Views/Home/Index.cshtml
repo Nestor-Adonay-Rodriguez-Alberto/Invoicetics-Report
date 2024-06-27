@@ -2,7 +2,44 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    body {
+        background-color: #6d6d6d;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .presentation {
+        margin-top: 150px;
+        color: white;
+        text-align: center;
+    }
+
+        .presentation h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .presentation p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .presentation .highlight {
+            color: #ffcf1b;
+            font-weight: bold;
+        }
+</style>
+
+
+<div class="presentation">
+    <h1>Proyecto de facturación y generación de informes y gráficos</h1>    
+    <p>
+        permite la creación rápida y sencilla de facturas,
+        generación de reportes detallados de estas facturas, y
+        la visualización de ventas anuales mediante gráficas.
+    </p>
+    <p>Las tecnologías utilizadas son: <span class="highlight">C#</span>, <span class="highlight">ASP.NET Core 6</span>, <span class="highlight">Entity Framework</span>, <span class="highlight">Rotativa PDF</span>, <span class="highlight">EPPLUS</span>, <span class="highlight">Google Charts</span>.</p>
 </div>
