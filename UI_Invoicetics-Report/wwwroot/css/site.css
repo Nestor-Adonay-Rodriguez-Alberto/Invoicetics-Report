@@ -25,3 +25,31 @@ body {
 .navbar-custom {
     background-color: #3e3b3b;
 }
+
+/* Estilos responsivos para pantallas pequeñas */
+.chart-container {
+    width: 100%;
+    height: 500px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+/* Estilos para el contenedor principal */
+.chart-container-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Media query para pantallas grandes */
+@media (min-width: 768px) {
+    .chart-container-wrapper {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .chart-container {
+        width: calc(50% - 10px);
+        margin-bottom: 50px;
+    }
+}
