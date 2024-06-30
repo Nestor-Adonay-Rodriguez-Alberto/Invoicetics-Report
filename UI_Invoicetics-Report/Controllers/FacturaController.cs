@@ -147,7 +147,7 @@ namespace UI_Invoicetics_Report.Controllers
                 if (factura.Lista_DetalleFactura.Any(x => x.PrecioProducto < 1))
                 {
                     TempData["PrecioRequerido"] = "Ingrese El Precio Del Producto.";
-                }
+                } 
 
 
                 List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
