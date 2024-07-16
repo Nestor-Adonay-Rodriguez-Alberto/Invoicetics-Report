@@ -17,7 +17,7 @@ namespace Acceso_Datos
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Factura> Facturas { get; set; }
         public DbSet<DetalleFactura> DetalleFacturas { get; set; }
-
+        public DbSet<Producto> Productos { get; set; }
 
     }
 }
