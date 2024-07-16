@@ -15,6 +15,8 @@ namespace Logica_Negocio
             services.AddScoped<EmpleadoBL>();
             services.AddScoped<FacturaBL>();
             services.AddScoped<ReportesBL>();
+            services.AddScoped<ProductoBL>();
+
 
             return services;
         }

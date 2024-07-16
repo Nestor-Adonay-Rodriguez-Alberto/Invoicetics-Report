@@ -17,6 +17,7 @@ namespace Acceso_Datos
             services.AddScoped<EmpleadoDAL>();
             services.AddScoped<FacturaDAL>();
             services.AddScoped<ReportesDAL>();
+            services.AddScoped<ProductoDAL>();
 
             return services;
         }
