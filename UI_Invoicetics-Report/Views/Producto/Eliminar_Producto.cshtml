@@ -4,35 +4,68 @@
     ViewData["Title"] = "Eliminar_Producto";
 }
 
-<h1>Eliminar_Producto</h1>
+<style>
+    /* Estilos personalizados */
+    .form-container {
+        max-width: 550px;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        margin-top: 20px;
+    }
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Producto</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdProducto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdProducto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
-    </dl>
-    
+        .form-container h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .form-container .row {
+            margin-bottom: 10px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+</style>
+
+<div class="form-container">
+    <h1>Eliminar</h1>
+
+    <div>
+        <h5>Datos Del Producto</h5>
+        <hr />
+
+        <dl class="row">
+
+            <dt class="col-sm-2">
+                @Html.DisplayName("NOMBRE")
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Nombre)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayName("PRECIO")
+            </dt>
+            <dd class="col-sm-10">
+                <td>$ @Model.Precio</td>
+            </dd>
+
+        </dl>
+
+    </div>
+
+    <!-- BOTONES -->
     <form asp-action="Eliminar_Producto">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="hidden" asp-for="IdProducto" />
+        <input type="submit" value="ELIMINAR" class="btn btn-danger" /> |
+        <a asp-action="Registros_Productos" class="btn btn-secondary">CANCELAR</a>
     </form>
+
 </div>
