@@ -41,8 +41,9 @@
 
     <h5>Datos De La Factura</h5>
     <hr />
-    <form asp-action="Registrar_Factura">
+    <form asp-action="Registrar_Factura" id="Cadena_Consulta">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" name="index" id="txtIndexDetalle" />
 
         <!-- FILA #1 -->
         <div class="row">
@@ -89,7 +90,7 @@
 
         <!-- VISTA DETALLE -->
         <h5>Detalles De Los Productos</h5>
-        <div class="row row-cols-md-12">
+        <div class="row row-cols-md-12" id="Respuesta_Servidor">
             @await Html.PartialAsync("_DetalleDeFactura", Model.Lista_DetalleFactura)
         </div>
 
@@ -108,6 +109,9 @@
 </div>
 
 @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_DetalleScript");
+    }
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

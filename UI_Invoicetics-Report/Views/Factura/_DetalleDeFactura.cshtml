@@ -1,95 +1,114 @@
-﻿@* @{
+﻿@{
     Layout = null;
 }
 @model IEnumerable<Entidades.DetalleFactura>
+@using Entidades;
 <input type="hidden" name="accion" value="@ViewBag.Accion" />
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName("Producto A LLevar")
+                </th>
+                <th>
+                    @Html.DisplayName("Cantidad A LLevar")
+                </th>
+                <th>
+                    @Html.DisplayName("Precio Del Producto")
+                </th>
+                <th>
+                    @if (ViewBag.Accion == "Registrar_Factura" || ViewBag.Accion == "Editar_Factura")
+                    {
+                        <button type="button" onclick="Agregar_Detalle()" class="btn btn-primary">Agregar</button>
+                    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Nombre Del Producto")
-            </th>
-            <th>
-                @Html.DisplayName("Cantidad A LLevar")
-            </th>
-            <th>
-                @Html.DisplayName("Precio Del Producto")
-            </th>
-            <th>
-                @if (ViewBag.Accion == "Registrar_Factura" || ViewBag.Accion == "Editar_Factura")
-                {
-                    <button type="submit" class="btn btn-primary" formaction="@Url.Action("Agregar_Detalle")">Agregar</button>
-                }
+                </th>
+            </tr>
 
-            </th>
-        </tr>
-
-    </thead>
-    <tbody>
-        @{
-            int index = -1;
-        }
-        @if (Model != null && Model.Count() > 0)
-        {
-            @foreach (var item in Model)
+        </thead>
+        <tbody>
+            @{
+                int index = -1;
+            }
+            @if (Model != null && Model.Count() > 0)
             {
-                index++;
-                if (item.IdDetalleFactura > -1)
+                // Obtenemos Todos Los Registros:
+                List<Producto> Productos = (List<Producto>)ViewData["Lista_Productos"];
+                Productos.Add(new Producto { Nombre = "SELECCIONAR", IdProducto = 0, Precio = 0 });
+                Productos = Productos.OrderBy(s => s.IdProducto).ToList();
+
+
+                @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            <input type="hidden" value="@item.IdDetalleFactura" name="Lista_DetalleFactura[@index].IdDetalleFactura">
-                            <input type="hidden" value="@item.IdFacturaEnDetalleFactura" name="Lista_DetalleFactura[@index].IdFacturaEnDetalleFactura">
+                    index++;
+                    if (item.IdDetalleFactura > -1)
+                    {
 
-                            <input class="form-control" data-readonly type="text" name="Lista_DetalleFactura[@index].NombreProducto" value="@item.NombreProducto">
-                            @if (TempData["ProductoRequerido"]!=null)
-                            {
-                                <div class="alert alert-danger">@TempData["ProductoRequerido"]</div>
-                            }
-                        </td>
-                        <td>
-                            <input class="form-control" data-readonly type="number" name="Lista_DetalleFactura[@index].CantidadComprada" value="@item.CantidadComprada">
-                            @if (TempData["CantidadRequerida"] != null)
-                            {
-                                <div class="alert alert-danger">@TempData["CantidadRequerida"]</div>
-                            }
-                        </td>
-                        <td>
-                            <input class="form-control" data-readonly type="number" name="Lista_DetalleFactura[@index].PrecioProducto" value="@item.PrecioProducto">
-                            @if (TempData["PrecioRequerido"] != null)
-                            {
-                                <div class="alert alert-danger">@TempData["PrecioRequerido"]</div>
-                            }
-                        </td>
+                        // Para Sellecionar Algun Registro:
+                        SelectList Lista_Productos = new SelectList(Productos, "IdProducto", "Nombre", item.IdProductoEnDetalle);
+                        string idPrecio = "txtPrecio" + index;
+                        string idProducto = "slProducto" + index;
 
-                        <td>
-                            @if (ViewBag.Accion == "Registrar_Factura" || ViewBag.Accion == "Editar_Factura")
-                            {
-                                <button name="index" value="@index" class="btn btn-secondary" type="submit" formaction="@Url.Action("Eliminar_Detalle")">Eliminar</button>
-                            }
+                        // Filas Del Detalle:
+                        <tr>
 
-                        </td>
-                    </tr>
-                }
-                else
-                {
-                    <tr style="display:none">
-                        <td>
-                            <input type="hidden" value="@item.IdDetalleFactura" name="Lista_DetalleFactura[@index].IdDetalleFactura">
-                            <input type="hidden" value="@item.IdFacturaEnDetalleFactura" name="Lista_DetalleFactura[@index].IdFacturaEnDetalleFactura">
-                            <input type="hidden" name="Lista_DetalleFactura[@index].NombreProducto" value="@item.NombreProducto">
-                            <input type="hidden" name="Lista_DetalleFactura[@index].CantidadComprada" value="@item.CantidadComprada">
-                            <input type="hidden" name="Lista_DetalleFactura[@index].PrecioProducto" value="@item.PrecioProducto">
-                        </td>
-                    </tr>
+                            <td>
+                                <input type="hidden" value="@item.IdDetalleFactura" name="Lista_DetalleFactura[@index].IdDetalleFactura">
+                                <input type="hidden" value="@item.IdFacturaEnDetalleFactura" name="Lista_DetalleFactura[@index].IdFacturaEnDetalleFactura">
+
+                                <select style="width:250px;" class="form-control" data-readonly id="@idProducto" onchange="Combo_Productos('@idProducto','@idPrecio')" name="Lista_DetalleFactura[@index].IdProductoEnDetalle" asp-items="Lista_Productos"></select>
+                                @if (TempData["ProductoRequerido"] != null)
+                                {
+                                    <div class="alert alert-danger">@TempData["ProductoRequerido"]</div>
+                                }
+                            </td>
+
+                            <td>
+                                <input style="width:250px;" class="form-control" type="number" data-readonly name="Lista_DetalleFactura[@index].CantidadComprada" value="@item.CantidadComprada">
+                                @if (TempData["CantidadRequerida"] != null)
+                                {
+                                    <div class="alert alert-danger">@TempData["CantidadRequerida"]</div>
+                                }
+                            </td>
+
+                            <td>
+                                <input style="width:250px;" class="form-control" id="@idPrecio" readonly type="number" name="Lista_DetalleFactura[@index].PrecioProducto" value="@item.PrecioProducto">
+                            </td>
+
+                            <td>
+                                @if (ViewBag.Accion == "Registrar_Factura" || ViewBag.Accion == "Editar_Factura")
+                                {
+                                    <button onclick="Eliminar_Detalle('@index')" class="btn btn-secondary" type="button">Eliminar</button>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        // Para Sellecionar Algun Registro:
+                        SelectList Lista_Productos = new SelectList(Productos, "IdProducto", "Nombre", item.IdProductoEnDetalle);
+                        string idPrecio = "txtPrecio" + index;
+                        string idProducto = "slProducto" + index;
+
+                        <tr style="display:none">
+                            <td>
+                                <input type="hidden" value="@item.IdDetalleFactura" name="Lista_DetalleFactura[@index].IdDetalleFactura">
+                                <input type="hidden" value="@item.IdFacturaEnDetalleFactura" name="Lista_DetalleFactura[@index].IdFacturaEnDetalleFactura">
+
+                                <select class="form-control" data-readonly id="@idProducto" onchange="Combo_Productos('@idProducto','@idPrecio')" name="Lista_DetalleFactura[@index].IdProductoEnDetalle" asp-items="Lista_Productos"></select>
+                                <input type="hidden" name="Lista_DetalleFactura[@index].CantidadComprada" value="@item.CantidadComprada">
+                                <input type="hidden" name="Lista_DetalleFactura[@index].PrecioProducto" value="@item.PrecioProducto">
+                            </td>
+                        </tr>
+                    }
                 }
             }
-        }
 
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
+</div>
 
 
 @if (ViewBag.Accion == "Detalle_Factura" || ViewBag.Accion == "Eliminar_Factura")
@@ -104,5 +123,20 @@
 
     </script>
 }
+else
+{
+    foreach (var item in ViewData["Lista_Productos"] as List<Producto>)
+    {
+        <span data-Lista_Productos="@item.IdProducto" data-precio="@item.Precio"></span>
+    }
+    <script>
+        function Combo_Productos(idproducto, idprecio) {
+            var Lista_Productos = document.querySelector("#" + idproducto);
+            var txtPrecio = document.querySelector("#" + idprecio);
+            var spanData = document.querySelector("*[data-Lista_Productos='" + Lista_Productos.value + "']");
+            txtPrecio.value = spanData.getAttribute("data-precio");
+        }
+    </script>
 
- *@
+}
+

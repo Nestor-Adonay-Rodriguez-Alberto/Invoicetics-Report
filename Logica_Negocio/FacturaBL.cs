@@ -42,7 +42,11 @@ namespace Logica_Negocio
             return await _FacturaDAL.Lista_Empleados();
         }
 
-
+        // Lista De La Tabla Producto Para ViewData:
+        public async Task<List<Producto>> Lista_Productos()
+        {
+            return await _FacturaDAL.Lista_Productos();
+        }
 
         // *******  METODOS QUE RECIBIRAN OBJETOS Y MODIFICARAN LA DB  ********
         // ********************************************************************

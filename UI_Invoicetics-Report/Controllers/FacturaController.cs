@@ -32,6 +32,9 @@ namespace UI_Invoicetics_Report.Controllers
         {
             Factura Objeto_Obtenido = await _FacturaBL.Obtener_PorId(new Factura() { IdFactura = id });
 
+            // Los Registros Tabla Productos Para Seleccionar:
+            ViewData["Lista_Productos"] = await _FacturaBL.Lista_Productos();
+
             ViewBag.Accion = "Detalle_Factura";
             return View(Objeto_Obtenido);
         }
@@ -64,10 +67,12 @@ namespace UI_Invoicetics_Report.Controllers
             Objeto_Inicio.Lista_DetalleFactura = new List<DetalleFactura>();
             Objeto_Inicio.Lista_DetalleFactura.Add(new DetalleFactura { CantidadComprada = 1, PrecioProducto = 0 });
 
-
+            // Los Registros Tabla Empleado Para Seleccionar:
             List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
             ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre");
 
+            // Los Registros Tabla Productos Para Seleccionar:
+            ViewData["Lista_Productos"] = await _FacturaBL.Lista_Productos();
 
             ViewBag.Accion = "Registrar_Factura";
             return View(Objeto_Inicio);
@@ -77,41 +82,40 @@ namespace UI_Invoicetics_Report.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        //public async Task<IActionResult> Registrar_Factura(Factura factura)
-        //{
-        //    // Verificar Si Un Atributo Del Detalle Biene Vasio
-        //    if (factura.Lista_DetalleFactura.Any(x => x.NombreProducto == null || x.CantidadComprada<1 || x.PrecioProducto < 1))
-        //    {
+        public async Task<IActionResult> Registrar_Factura(Factura factura)
+        {
+            // Verificar Si Un Atributo Del Detalle Biene Vasio
+            if (factura.Lista_DetalleFactura.Any(x => x.IdProductoEnDetalle == 0 || x.CantidadComprada < 1))
+            {
 
-        //        if(factura.Lista_DetalleFactura.Any(x => x.NombreProducto ==null))
-        //        {
-        //            TempData["ProductoRequerido"] = "Ingrese El Nombre Del Producto A LLevar.";
-        //        }
-        //        if (factura.Lista_DetalleFactura.Any(x => x.CantidadComprada <1))
-        //        {
-        //            TempData["CantidadRequerida"] = "Ingrese La Cantidad A LLevar.";
-        //        }
-        //        if (factura.Lista_DetalleFactura.Any(x => x.PrecioProducto <1))
-        //        {
-        //            TempData["PrecioRequerido"] = "Ingrese El Precio Del Producto.";
-        //        }
+                if (factura.Lista_DetalleFactura.Any(x => x.IdProductoEnDetalle == 0))
+                {
+                    TempData["ProductoRequerido"] = "Seleccione El Producto A LLevar.";
+                }
+                if (factura.Lista_DetalleFactura.Any(x => x.CantidadComprada < 1))
+                {
+                    TempData["CantidadRequerida"] = "Ingrese La Cantidad A LLevar.";
+                }
+                
 
+                // Los Registros Tabla Empleado Para Seleccionar:
+                List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
+                ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
 
-        //        List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
-        //        ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
+                // Los Registros Tabla Productos Para Seleccionar:
+                ViewData["Lista_Productos"] = await _FacturaBL.Lista_Productos();
 
+                ViewBag.Accion = "Registrar_Factura";
+                return View(factura);
+            }
+            else
+            {
+                factura.Total = factura.Lista_DetalleFactura.Sum(x => x.CantidadComprada * x.PrecioProducto);
+                await _FacturaBL.Registrar_Factura(factura);
+            }
 
-        //        ViewBag.Accion = "Registrar_Factura";
-        //        return View(factura);
-        //    }           
-        //    else
-        //    {
-        //        factura.Total = factura.Lista_DetalleFactura.Sum(x => x.CantidadComprada * x.PrecioProducto);
-        //        await _FacturaBL.Registrar_Factura(factura);
-        //    }
-
-        //    return RedirectToAction("Registros_Facturas", "Factura");
-        //}
+            return RedirectToAction("Registros_Facturas", "Factura");
+        }
 
 
         // Manda Un Objeto Encontrado De La Tabla
@@ -122,6 +126,10 @@ namespace UI_Invoicetics_Report.Controllers
             List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
             ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", Objeto_Obtenido.IdEmpleadoEnFactura);
 
+            // Los Registros Tabla Productos Para Seleccionar:
+            ViewData["Lista_Productos"] = await _FacturaBL.Lista_Productos();
+
+
             ViewBag.Accion = "Editar_Factura";
             return View(Objeto_Obtenido);
         }
@@ -130,46 +138,49 @@ namespace UI_Invoicetics_Report.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        //public async Task<IActionResult> Editar_Factura(Factura factura)
-        //{
-        //    // Verificar Si Un Atributo Del Detalle Biene Vasio
-        //    if (factura.Lista_DetalleFactura.Any(x => x.NombreProducto == null || x.CantidadComprada < 1 || x.PrecioProducto < 1))
-        //    {
+        public async Task<IActionResult> Editar_Factura(Factura factura)
+        {
+            // Verificar Si Un Atributo Del Detalle Biene Vasio
+            if (factura.Lista_DetalleFactura.Any(x => x.IdProductoEnDetalle == 0 || x.CantidadComprada < 1))
+            {
 
-        //        if (factura.Lista_DetalleFactura.Any(x => x.NombreProducto == null))
-        //        {
-        //            TempData["ProductoRequerido"] = "Ingrese El Nombre Del Producto A LLevar.";
-        //        }
-        //        if (factura.Lista_DetalleFactura.Any(x => x.CantidadComprada < 1))
-        //        {
-        //            TempData["CantidadRequerida"] = "Ingrese La Cantidad A LLevar.";
-        //        }
-        //        if (factura.Lista_DetalleFactura.Any(x => x.PrecioProducto < 1))
-        //        {
-        //            TempData["PrecioRequerido"] = "Ingrese El Precio Del Producto.";
-        //        } 
+                if (factura.Lista_DetalleFactura.Any(x => x.IdProductoEnDetalle == 0))
+                {
+                    TempData["ProductoRequerido"] = "Seleccione El Producto A LLevar.";
+                }
+                if (factura.Lista_DetalleFactura.Any(x => x.CantidadComprada < 1))
+                {
+                    TempData["CantidadRequerida"] = "Ingrese La Cantidad A LLevar.";
+                }
 
 
-        //        List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
-        //        ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
+                // Los Registros Tabla Empleado Para Seleccionar:
+                List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
+                ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
+
+                // Los Registros Tabla Productos Para Seleccionar:
+                ViewData["Lista_Productos"] = await _FacturaBL.Lista_Productos();
 
 
-        //        ViewBag.Accion = "Registrar_Factura";
-        //        return View(factura);
-        //    }
-        //    else
-        //    {
-        //        await _FacturaBL.Editar_Factura(factura);
-        //    }
+                ViewBag.Accion = "Registrar_Factura";
+                return View(factura);
+            }
+            else
+            {
+                await _FacturaBL.Editar_Factura(factura);
+            }
 
-        //    return RedirectToAction("Registros_Facturas", "Factura");
-        //}
+            return RedirectToAction("Registros_Facturas", "Factura");
+        }
 
 
         // Manda Un Objeto Encontrado De La Tabla:
         public async Task<IActionResult> Eliminar_Factura(int id)
         {
             Factura Objeto_Obtenido = await _FacturaBL.Obtener_PorId(new Factura() { IdFactura = id });
+
+            // Los Registros Tabla Productos Para Seleccionar:
+            ViewData["Lista_Productos"] = await _FacturaBL.Lista_Productos();
 
             ViewBag.Accion = "Eliminar_Factura";
             return View(Objeto_Obtenido);
@@ -193,42 +204,51 @@ namespace UI_Invoicetics_Report.Controllers
         //         METODOS PARA AGREGAR O ELIMINAR DETALLES A LA FACTURA
         // **********************************************************************
 
-        //public async Task<IActionResult> Agregar_Detalle(Factura factura, string accion)
-        //{
-        //    //Agregamos Detalle A La Lista:
-        //    factura.Lista_DetalleFactura.Add(new DetalleFactura
-        //    {
-        //        CantidadComprada = 1,
-        //        PrecioProducto = 0
-        //    });
-
-        //    List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
-        //    ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
-
-        //    ViewBag.Accion = accion;
-        //    return View(accion, factura);
-        //}
+        [HttpPost]
+        public async Task<IActionResult> Agregar_Detalle(Factura factura, string accion)
+        {
+            //Agregamos Detalle A La Lista:
+            factura.Lista_DetalleFactura.Add(new DetalleFactura
+            {
+                CantidadComprada = 1,
+                PrecioProducto = 0
+            });
 
 
-        //public async Task<IActionResult> Eliminar_Detalle(Factura factura, int index, string accion)
-        //{
-        //    DetalleFactura Objeto_Obtenido = factura.Lista_DetalleFactura[index];
+            //// Los Registros Tabla Empleado Para Seleccionar:
+            //List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
+            //ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
 
-        //    if (accion == "Editar_Factura" && Objeto_Obtenido.IdDetalleFactura > 0)
-        //    {
-        //        Objeto_Obtenido.IdDetalleFactura = Objeto_Obtenido.IdDetalleFactura * -1;
-        //    }
-        //    else
-        //    {
-        //        factura.Lista_DetalleFactura.RemoveAt(index);
-        //    }
+            // Los Registros Tabla Productos Para Seleccionar:
+            ViewData["Lista_Productos"] = await _FacturaBL.Lista_Productos();
 
-        //    List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
-        //    ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
+            ViewBag.Accion = accion;
+            return PartialView("_DetalleDeFactura", factura.Lista_DetalleFactura);
+        }
 
-        //    ViewBag.Accion = accion;
-        //    return View(accion, factura);
-        //}
+        [HttpPost]
+        public async Task<IActionResult> Eliminar_Detalle(Factura factura, int index, string accion)
+        {
+            DetalleFactura Objeto_Obtenido = factura.Lista_DetalleFactura[index];
+
+            if (accion == "Editar_Factura" && Objeto_Obtenido.IdDetalleFactura > 0)
+            {
+                Objeto_Obtenido.IdDetalleFactura = Objeto_Obtenido.IdDetalleFactura * -1;
+            }
+            else
+            {
+                factura.Lista_DetalleFactura.RemoveAt(index);
+            }
+
+            //List<Empleado> Lista_Empleados = await _FacturaBL.Lista_Empleados();
+            //ViewData["Lista_Empleados"] = new SelectList(Lista_Empleados, "IdEmpleado", "Nombre", factura.IdEmpleadoEnFactura);
+
+            // Los Registros Tabla Productos Para Seleccionar:
+            ViewData["Lista_Productos"] = await _FacturaBL.Lista_Productos();
+
+            ViewBag.Accion = accion;
+            return PartialView("_DetalleDeFactura", factura.Lista_DetalleFactura);
+        }
 
     }
 }

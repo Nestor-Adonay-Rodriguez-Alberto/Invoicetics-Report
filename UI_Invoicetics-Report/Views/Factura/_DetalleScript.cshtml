@@ -1,0 +1,29 @@
+﻿<script>
+
+    // Invocara Al Metodo Del Controllador
+    function Agregar_Detalle() {
+        $.ajax({
+            url: '@Url.Action("Agregar_Detalle")',
+            data: $("#Cadena_Consulta").serialize(),
+            dataType: "html",
+            type: 'POST',
+            success: function (textHtml) {
+                $("#Respuesta_Servidor").html(textHtml);
+            }
+        });
+    }
+
+    // Invocara Al Metodo Del Controllador
+    function Eliminar_Detalle(index) {
+        $("#txtIndexDetalle").val(index);
+        $.ajax({
+            url: '@Url.Action("Eliminar_Detalle")',
+            data: $("#Cadena_Consulta").serialize(),
+            dataType: "html",
+            type: 'POST',
+            success: function (textHtml) {
+                $("#Respuesta_Servidor").html(textHtml);
+            }
+        });
+    }
+</script>

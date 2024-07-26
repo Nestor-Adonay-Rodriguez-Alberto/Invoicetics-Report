@@ -25,6 +25,7 @@ namespace Acceso_Datos
             Factura? Objeto_Obtenido = await _MyDBcontext.Facturas
                 .Include(x => x.Objeto_Empleado)
                 .Include(x => x.Lista_DetalleFactura)
+                .ThenInclude(x=> x.Objeto_Producto)
                 .FirstOrDefaultAsync(x => x.IdFactura == factura.IdFactura);
 
             if (Objeto_Obtenido != null)
@@ -57,6 +58,11 @@ namespace Acceso_Datos
         }
 
 
+        // Lista De La Tabla Producto Para ViewData:
+        public async Task<List<Producto>> Lista_Productos()
+        {
+            return await _MyDBcontext.Productos.ToListAsync();
+        }
 
 
         // *******  METODOS QUE RECIBIRAN OBJETOS Y MODIFICARAN LA DB  ********
@@ -124,20 +130,20 @@ namespace Acceso_Datos
 
 
         // DETALLES EXISTENTES DE LA LISTA "Podrian Traer Cambios":
-        //private void Editar_Detalles(Factura Objeto_Obtenido, Factura factura)
-        //{
-        //    IEnumerable<DetalleFactura> Detalles_Lista = factura.Lista_DetalleFactura.Where(s => s.IdDetalleFactura > 0);
-        //    foreach (DetalleFactura Detalle in Detalles_Lista)
-        //    {
-        //        // Detalle En La Lista De La Factura Encontrada
-        //        DetalleFactura? Detalle_EnLista = Objeto_Obtenido.Lista_DetalleFactura.FirstOrDefault(s => s.IdDetalleFactura == Detalle.IdDetalleFactura);
+        private void Editar_Detalles(Factura Objeto_Obtenido, Factura factura)
+        {
+            IEnumerable<DetalleFactura> Detalles_Lista = factura.Lista_DetalleFactura.Where(s => s.IdDetalleFactura > 0);
+            foreach (DetalleFactura Detalle in Detalles_Lista)
+            {
+                // Detalle En La Lista De La Factura Encontrada
+                DetalleFactura? Detalle_EnLista = Objeto_Obtenido.Lista_DetalleFactura.FirstOrDefault(s => s.IdDetalleFactura == Detalle.IdDetalleFactura);
 
-        //        Detalle_EnLista.NombreProducto = Detalle.NombreProducto;
-        //        Detalle_EnLista.CantidadComprada = Detalle.CantidadComprada;
-        //        Detalle_EnLista.PrecioProducto = Detalle.PrecioProducto;
+                Detalle_EnLista.IdProductoEnDetalle = Detalle.IdProductoEnDetalle;
+                Detalle_EnLista.CantidadComprada = Detalle.CantidadComprada;
+                Detalle_EnLista.PrecioProducto = Detalle.PrecioProducto;
 
-        //    }
-        //}
+            }
+        }
 
 
         // ELIMINAR LOS DETALLES DE LA LISTA:
