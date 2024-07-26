@@ -4,6 +4,7 @@ using Acceso_Datos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Acceso_Datos.Migrations
 {
     [DbContext(typeof(MyDBcontext))]
-    partial class MyDBcontextModelSnapshot : ModelSnapshot
+    [Migration("20240726053748_Migracion_Cambios_Entidades")]
+    partial class Migracion_Cambios_Entidades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

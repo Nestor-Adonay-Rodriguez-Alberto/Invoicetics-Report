@@ -92,7 +92,7 @@ namespace Acceso_Datos
 
 
                 // DETALLES EXISTENTES DE LA LISTA "Podrian Traer Cambios":
-                Editar_Detalles(Objeto_Obtenido, factura);
+                //Editar_Detalles(Objeto_Obtenido, factura);
 
 
                 // ELIMINAR LOS DETALLES DE LA LISTA:
@@ -124,20 +124,20 @@ namespace Acceso_Datos
 
 
         // DETALLES EXISTENTES DE LA LISTA "Podrian Traer Cambios":
-        private void Editar_Detalles(Factura Objeto_Obtenido, Factura factura)
-        {
-            IEnumerable<DetalleFactura> Detalles_Lista = factura.Lista_DetalleFactura.Where(s => s.IdDetalleFactura > 0);
-            foreach (DetalleFactura Detalle in Detalles_Lista)
-            {
-                // Detalle En La Lista De La Factura Encontrada
-                DetalleFactura? Detalle_EnLista = Objeto_Obtenido.Lista_DetalleFactura.FirstOrDefault(s => s.IdDetalleFactura == Detalle.IdDetalleFactura);
+        //private void Editar_Detalles(Factura Objeto_Obtenido, Factura factura)
+        //{
+        //    IEnumerable<DetalleFactura> Detalles_Lista = factura.Lista_DetalleFactura.Where(s => s.IdDetalleFactura > 0);
+        //    foreach (DetalleFactura Detalle in Detalles_Lista)
+        //    {
+        //        // Detalle En La Lista De La Factura Encontrada
+        //        DetalleFactura? Detalle_EnLista = Objeto_Obtenido.Lista_DetalleFactura.FirstOrDefault(s => s.IdDetalleFactura == Detalle.IdDetalleFactura);
 
-                Detalle_EnLista.NombreProducto = Detalle.NombreProducto;
-                Detalle_EnLista.CantidadComprada = Detalle.CantidadComprada;
-                Detalle_EnLista.PrecioProducto = Detalle.PrecioProducto;
+        //        Detalle_EnLista.NombreProducto = Detalle.NombreProducto;
+        //        Detalle_EnLista.CantidadComprada = Detalle.CantidadComprada;
+        //        Detalle_EnLista.PrecioProducto = Detalle.PrecioProducto;
 
-            }
-        }
+        //    }
+        //}
 
 
         // ELIMINAR LOS DETALLES DE LA LISTA:
