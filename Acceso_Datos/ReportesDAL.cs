@@ -34,6 +34,7 @@ namespace Acceso_Datos
         {
             List<Factura> Objetos_Obtenidos = await _MyDBcontext.Facturas
                 .Include(x => x.Lista_DetalleFactura)
+                .ThenInclude(x=> x.Objeto_Producto)
                 .Include(x => x.Objeto_Empleado)
                 .ToListAsync();
 

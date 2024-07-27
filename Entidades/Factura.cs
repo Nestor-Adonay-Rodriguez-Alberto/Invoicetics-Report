@@ -22,7 +22,7 @@ namespace Entidades
 
         public int Correlativo { get; set; }
 
-
+        [Column(TypeName = "decimal(10,2)")]
         public double Total { get; set; }
 
 
