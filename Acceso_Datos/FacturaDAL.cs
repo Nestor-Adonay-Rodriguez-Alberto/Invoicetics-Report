@@ -98,7 +98,7 @@ namespace Acceso_Datos
 
 
                 // DETALLES EXISTENTES DE LA LISTA "Podrian Traer Cambios":
-                //Editar_Detalles(Objeto_Obtenido, factura);
+                Editar_Detalles(Objeto_Obtenido, factura);
 
 
                 // ELIMINAR LOS DETALLES DE LA LISTA:

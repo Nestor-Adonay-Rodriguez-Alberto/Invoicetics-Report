@@ -65,7 +65,7 @@
                             </td>
 
                             <td>
-                                <input style="width:250px;" class="form-control" type="number" data-readonly name="Lista_DetalleFactura[@index].CantidadComprada" value="@item.CantidadComprada">
+                                <input style="width:140px;" class="form-control" type="number" data-readonly name="Lista_DetalleFactura[@index].CantidadComprada" value="@item.CantidadComprada">
                                 @if (TempData["CantidadRequerida"] != null)
                                 {
                                     <div class="alert alert-danger">@TempData["CantidadRequerida"]</div>
@@ -73,7 +73,7 @@
                             </td>
 
                             <td>
-                                <input style="width:250px;" class="form-control" id="@idPrecio" readonly type="number" name="Lista_DetalleFactura[@index].PrecioProducto" value="@item.PrecioProducto">
+                                <input style="width:150px;" class="form-control" id="@idPrecio" readonly type="number" name="Lista_DetalleFactura[@index].PrecioProducto" value="@item.PrecioProducto">
                             </td>
 
                             <td>
